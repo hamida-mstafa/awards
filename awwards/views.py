@@ -17,3 +17,21 @@ def index(request):
     posts = Posts.objects.all()
     form = PostsForm()
     return render(request,'index.html',{"form":form,"posts":posts})
+
+def signup(request):
+    from = SignUpForm
+    if request.method == 'POST':
+        form = SignUpForm(request.POST)
+        if form.is_valid():
+            form.save()
+            username = form.cleaned_data['username']
+            email = form.cleaned_data['email']
+            password = form.cleaned_data['password']
+            user=authenticate(username=username,email=email,password=password)
+            user.save()
+            profile=profile(user=user)
+            profile.save()
+            login(request,user)
+            return redirect('/')
+    return render(request,'signup.html',{"form":form})
+    
