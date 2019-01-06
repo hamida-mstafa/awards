@@ -20,3 +20,20 @@ class Profile(models.Model):
 
     def __str__(self):
         return self.user.username
+
+class Posts(models.Model):
+    user = models.Foreignkey(User,on_delete=models.CASCADE,related_name='posts')
+    name = models.CharField(max_length=30)
+    link = models.URLField()
+    image1 = models.ImageField(upload_to='images')
+    image2 = models.ImageField(upload_to='images')
+    image3 = models.ImageField(upload_to='images')
+    postedon = models.DateTimeField(auto_now_add=True)
+    video = models.FileField(upload_to='videos',null=True)
+
+
+    def __str__(self):
+        return self.user.username
+
+    class Meta:
+        ordering = ['-id']
