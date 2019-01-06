@@ -12,4 +12,11 @@ class Profile(models.Model):
     bio = HTMLField(max_length=300)
     phone_number = models.BigIntegerField()
 
-    
+    def save_profile(self):
+        self.save()
+
+    def delete_profile(self):
+        self.delete()
+
+    def __str__(self):
+        return self.user.username
