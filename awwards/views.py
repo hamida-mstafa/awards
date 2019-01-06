@@ -124,3 +124,57 @@ def profiles(request,id):
         user=User.objects.get(id=id)
         posts = Posts.objects.filter(user=user)
         return render(request,'profile/profiles.html',{"user":user,"posts":posts})
+class PostList(APIView):
+        def get(self,request,format=None):
+                post = Posts.objects.all()
+                serialized = PostsSerializer(post,many=True)
+                return Response(serialized.data)
+
+        def post(self,request,format=None):
+                serializing = PostsSerializer(data=request.data)
+                if serializing.is_valid():
+                        serializing.save()
+                        return Response(serialized.data,status=status.HTTP_201_CREATED)
+                return Response(serialized.errors,status=staus.HTTP_401_BAD_REQUEST)
+
+
+
+class ProfilesList(APIView):
+        def get(self,request,format=None):
+                postlist = Profile.objects.all()
+                serialized = ProfileSerializer(postlist,many=True)
+                return Response(serialized.data)
+
+
+        def post(self,request,format=None):
+                serializing = ProfileSerializer(data=request.data)
+                if serializing.is_valid():
+                        serializing.save()
+                        return Response(serializing.data,status=status.HTTP_201_CREATED)
+                return Response(serializing.errors,status=status.HTTP_401_BAD_REQUEST)
+
+class ProfileData(APIView):
+        permission_classes = (IsAdminOrReadOnly,)
+        def get_profile(self, pk):
+                try:
+                        return Profile.objects.get(pk=pk)
+                except Profile.DoesNotExist:
+                        return Http404
+
+        def get(self, request, pk, format=None):
+                profile = self.get_profile(pk)
+                serialized = ProfileSerializer(profile)
+                return Response(serialized.data)
+
+        def put(self,request,pk,format=None):
+                profile = self.get_profile(pk)
+                serializers = ProfileSerializer(profile,request.data)
+                if serializers.is_valid():
+                        serializers.save()
+                        return Response(serializers.data)
+                return Response(serializers.errors,status=ststus.HTTP_400_BAD_REQUEST)
+
+        def delete(self,request,pk,format=None):
+                profile = self.get_profile(pk)
+                profile.delete()
+                return Response(status=status.HTTP_204_BAD_REQUEST)
