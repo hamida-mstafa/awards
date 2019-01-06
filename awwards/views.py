@@ -48,3 +48,14 @@ def profile(request):
             message = 'Fill the form appropriately'
             return render(request,'profile/profile.html',{"profile":profile,"form":form,"message":message})
     return render(request,'profile/profile.html',{"form":form,"posts":posts,"profile":profile})
+
+def posts(request):
+        if request.method == 'POST':
+                form = PostsForm(request.POST,request.FILES)
+                if form.is_valid():
+                        post = form.save(commit=False)
+                        post.user = request.user
+                        post.save()
+                        return redirect('index')
+
+        return redirect('index')
