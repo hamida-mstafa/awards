@@ -37,3 +37,27 @@ class Posts(models.Model):
 
     class Meta:
         ordering = ['-id']
+
+    @classmethod
+    def save_post(self):
+        self.save()
+    @classmethod
+    def get_posts(cls):
+         posts = cls.objects.all()
+         return posts
+    @classmethod
+    def delete_post(self):
+        self.delete()
+
+    def save_image(self):
+        self.save()
+
+    @classmethod
+    def delete_image_by_id(cls, id):
+        pictures = cls.objects.filter(pk=id)
+        pictures.delete()
+
+    @classmethod
+    def get_image_by_id(cls, id):
+        pictures = cls.objects.get(pk=id)
+        return pictures
