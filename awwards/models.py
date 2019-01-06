@@ -66,3 +66,11 @@ class Comments(models.model):
     user = models.Foreignkey(User)
     post = models.Foreignkey(Posts,related_name='comments')
     comment = models.CharField(max_length=150)
+
+class Likes(models.Model):
+    user = models.ForeignKey(User,on_delete=models.CASCADE)
+    post =  models.ForeignKey(Posts,on_delete=models.CASCADE,related_name='likes')
+    design = models.IntegerField(validators=[MinValueValidator(1),MaxValueValidator(5)])
+    usability = models.IntegerField(validators=[MinValueValidator(1),MaxValueValidator(5)])
+    creativity = models.IntegerField(validators=[MinValueValidator(1),MaxValueValidator(5)])
+    content = models.IntegerField(validators=[MinValueValidator(1),MaxValueValidator(5)])
