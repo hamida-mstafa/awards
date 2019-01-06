@@ -59,3 +59,53 @@ def posts(request):
                         return redirect('index')
 
         return redirect('index')
+
+def get_post_by_id(request,id):
+        post = Posts.objects.get(id=id)
+        likes = Likes.objects.filter(post=post)
+        design = []
+        usability = []
+        creativity = []
+        content = []
+        for x in likes:
+                design.append(x.design)
+                usability.append(x.usability)
+                creativity.append(x.creativity)
+                content.append(x.content)
+        de = []
+        us = []
+        cre = []
+        con = []
+
+        if len(usability)>0:
+                usa = (sum(usability)/len(usability))
+                us.append(usa)
+        if len(creativity)>0:
+                crea = (sum(creativity)/len(creativity))
+                cre.append(crea)
+        if len(design)>0:
+                des = (sum(design)/len(design))
+                de.append(des)
+        if len(content)>0:
+                cont = (sum(content)/len(content))
+                con.append(cont)
+
+
+
+        comm = Comments()
+        vote = Votes()
+        if request.method == 'POST':
+
+                vote_form = Votes(request.POST)
+                if vote_form.is_valid():
+
+                        design = vote_form.cleaned_data['design']
+                        usability = vote_form.cleaned_data['usability']
+                        content = vote_form.cleaned_data['content']
+                        creativity = vote_form.cleaned_data['creativity']
+                        rating = Likes(design=design,usability=usability,
+                                        content=content,creativity=creativity,
+                                        user=request.user,post=post)
+                        rating.save()
+                        return redirect('/')
+        return render(request,'one.html',{"post":post,"des":des,"usa":usa,"cont":cont,"crea":crea, "vote":vote,"comm":comm})
