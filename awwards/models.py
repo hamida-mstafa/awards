@@ -61,3 +61,8 @@ class Posts(models.Model):
     def get_image_by_id(cls, id):
         pictures = cls.objects.get(pk=id)
         return pictures
+
+class Comments(models.model):
+    user = models.Foreignkey(User)
+    post = models.Foreignkey(Posts,related_name='comments')
+    comment = models.CharField(max_length=150)
