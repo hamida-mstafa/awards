@@ -119,3 +119,8 @@ def comment(request,id):
             comment.save()
             return redirect('index')
     return redirect('index')
+
+def profiles(request,id):
+        user=User.objects.get(id=id)
+        posts = Posts.objects.filter(user=user)
+        return render(request,'profile/profiles.html',{"user":user,"posts":posts})
