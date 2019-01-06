@@ -90,8 +90,6 @@ def get_post_by_id(request,id):
                 cont = (sum(content)/len(content))
                 con.append(cont)
 
-
-
         comm = Comments()
         vote = Votes()
         if request.method == 'POST':
@@ -109,3 +107,15 @@ def get_post_by_id(request,id):
                         rating.save()
                         return redirect('/')
         return render(request,'one.html',{"post":post,"des":des,"usa":usa,"cont":cont,"crea":crea, "vote":vote,"comm":comm})
+
+def comment(request,id):
+    post = Posts.objects.get(id=id)
+    if request.method == 'POST':
+        comm=Comments(request.POST)
+        if comm.is_valid():
+            comment=comm.save(commit=False)
+            comment.user = request.user
+            comment.post=post
+            comment.save()
+            return redirect('index')
+    return redirect('index')
