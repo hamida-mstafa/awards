@@ -178,3 +178,14 @@ class ProfileData(APIView):
                 profile = self.get_profile(pk)
                 profile.delete()
                 return Response(status=status.HTTP_204_BAD_REQUEST)
+
+def search(request):
+    if 'projects' in request.GET or request.GET['projects']:
+        search_item = request.GET.get('projects')
+        searched_projects = Posts.objects.filter(name=search_item)
+        print(searched_projects)
+        message = "{}".format(search_item)
+        return render(request, 'search.html',{"message":message,"users":searched_users})
+    else:
+        message = "ooppss you have not searched for any user"
+        return render(request,'search.html',{"message":message})
